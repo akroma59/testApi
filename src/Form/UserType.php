@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 
 class UserType extends AbstractType
 {
@@ -14,10 +15,14 @@ class UserType extends AbstractType
     {
         $builder
             ->add('email')
-            ->add('roles')
-            ->add('password', PasswordType::class)
-            
-        ;
+            ->add('password', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'options' => ['attr' => ['class' => 'password-field']],
+                'required' => true,
+                'first_options'  => ['label' => 'Mot de passe'],
+                'second_options' => ['label' => 'Retaper mot de passe'],
+                'invalid_message' => 'Les mots de passe ne correspondent pas.',
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
