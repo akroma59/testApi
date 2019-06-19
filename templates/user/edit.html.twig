@@ -5,9 +5,9 @@
 {% block body %}
     <h1>Modification de l'utilisateur</h1>
 
-    {{ include('user/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
-
-    <a href="{{ path('user_index') }}">Revenir au menu</a>
-
+    <div class="w-25 m-auto">
+        {{ include('user/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+    </div>
+    
     {{ include('user/_delete_form.html.twig') }}
 {% endblock %}

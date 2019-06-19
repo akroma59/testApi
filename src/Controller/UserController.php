@@ -21,17 +21,6 @@ use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/", name="user_index", methods={"GET"})
-     */
-    public function index(UserRepository $userRepository): Response
-    {
-        //We get all user with a method of doctrine and we display all
-        return $this->render('user/index.html.twig', [
-            'users' => $userRepository->findAll(),
-        ]);
-    }
-
-    /**
      * @Route("/new", name="user_new", methods={"GET","POST"})
      */
     public function new(Request $request, UserPasswordEncoderInterface $passwordEncoder, LoginFormAuthenticator $authenticator, GuardAuthenticatorHandler $guardHandler): Response
@@ -103,7 +92,7 @@ class UserController extends AbstractController
         }   
         //We create a view to display the form
         return $this->render('user/email.html.twig', [
-            'user' => $user,
+
             'form' => $form->createView(),
         ]);
     }

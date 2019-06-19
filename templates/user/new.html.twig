@@ -4,8 +4,8 @@
 
 {% block body %}
     <h1>Créer un nouvel utilisateur</h1>
-
-    {{ include('user/_form.html.twig') }}
-
+        <div class="w-25 m-auto">
+            {{ include('user/_form.html.twig') }}
+        </div>
     <a href="{{ path('user_index') }}">Revenir au menu</a>
 {% endblock %}

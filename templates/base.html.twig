@@ -11,7 +11,18 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                <h1 class="display-4">Vincent Richardeau</h1>
+                <p class="lead">Ce site est un test technique pour utiliser les API sous symfony 4</p>
+            </div>
+        </div>
+        <div class="container text-center">
+            {% block body %}
+
+            {% endblock %}
+        </div>
+
         {% block javascripts %}{% endblock %}
     </body>
 </html>
