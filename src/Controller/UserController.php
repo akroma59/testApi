@@ -155,5 +155,10 @@ class UserController extends AbstractController
         return $this->redirectToRoute('user_index');
     }
 
-    
+    //On attend une réponse en Json
+    //$headers = array('Accept' => 'application/json');
+    //Requete de ce qu'on veut?
+    //$query = array('foo' => 'hello', 'bar' => 'world');
+    //Créatin de la requete pour le site
+    //$response = Unirest\Request::post('http://mockbin.com/request', $headers, $query);   
 }

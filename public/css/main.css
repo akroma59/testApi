@@ -14,3 +14,6 @@ a:hover {
     color: inherit;
 }
 
+table, th, td, tbody {
+    width: 50%;
+}
