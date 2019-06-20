@@ -80,7 +80,7 @@ class UserController extends AbstractController
                 $entityManager->flush();
                 //We send the new password encrypt to the email that was get in the form
                 $message = (new \Swift_Message("Demande de nouveau mot de passe"))
-                ->setFrom('vincentrichardeau59@gmail.com')
+                ->setFrom('')
                 ->setTo("$mail")
                 ->setBody("Voici votre nouveau mot de passe : $plainPassword"); 
                 $mailer->send($message);
@@ -154,6 +154,5 @@ class UserController extends AbstractController
         //We are redirected to the name of route
         return $this->redirectToRoute('user_index');
     }
-
-    
+   
 }
