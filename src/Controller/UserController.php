@@ -80,7 +80,7 @@ class UserController extends AbstractController
                 $entityManager->flush();
                 //We send the new password encrypt to the email that was get in the form
                 $message = (new \Swift_Message("Demande de nouveau mot de passe"))
-                ->setFrom('vincentrichardeau59@gmail.com')
+                ->setFrom('')
                 ->setTo("$mail")
                 ->setBody("Voici votre nouveau mot de passe : $plainPassword"); 
                 $mailer->send($message);
@@ -154,11 +154,5 @@ class UserController extends AbstractController
         //We are redirected to the name of route
         return $this->redirectToRoute('user_index');
     }
-
-    //On attend une réponse en Json
-    //$headers = array('Accept' => 'application/json');
-    //Requete de ce qu'on veut?
-    //$query = array('foo' => 'hello', 'bar' => 'world');
-    //Créatin de la requete pour le site
-    //$response = Unirest\Request::post('http://mockbin.com/request', $headers, $query);   
+   
 }

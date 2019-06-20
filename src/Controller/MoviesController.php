@@ -3,94 +3,67 @@
 namespace App\Controller;
 
 use App\Entity\Movies;
-use App\Form\MoviesType;
+use App\Form\SearchMoviesType;
 use App\Repository\MoviesRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
+
 
 /**
  * @Route("/movies")
  */
 class MoviesController extends AbstractController
-{
+{    
     /**
-     * @Route("/", name="movies_index", methods={"GET"})
+     * @Route("/search", name="movies_search", methods={"GET","POST"})
      */
-    public function index(MoviesRepository $moviesRepository): Response
-    {
-        return $this->render('movies/index.html.twig', [
-            'movies' => $moviesRepository->findAll(),
-        ]);
-    }
 
-    /**
-     * @Route("/new", name="movies_new", methods={"GET","POST"})
-     */
-    public function new(Request $request): Response
+    public function searchMovies(Request $request): Response
     {
-        $movie = new Movies();
-        $form = $this->createForm(MoviesType::class, $movie);
+        //We initiate serializer
+        $encoders = [new XmlEncoder(), new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer()];
+        $serializer = new Serializer($normalizers, $encoders);
+        //Create form for search movie with api
+        $form = $this->createForm(SearchMoviesType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
+            //When the form is submitted we get the title of movie
+            $data = $form->getData();
+            $title = $data['Title'];
+            // create curl resource 
+            $ch = curl_init(); 
+
+            // set url 
+            curl_setopt($ch, CURLOPT_URL, "http://www.omdbapi.com/?apikey&t=$title"); 
+
+            //return the transfer as a string 
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+
+            // $output contains the output string 
+            $output = curl_exec($ch); 
+
+            // close curl resource to free up system resources 
+            curl_close($ch); 
+
+            //We deserialize
+            $movie = $serializer->deserialize($output, Movies::class, 'json');   
+
+            //We save the movie in the database
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($movie);
             $entityManager->flush();
-
-            return $this->redirectToRoute('movies_index');
-        }
-
-        return $this->render('movies/new.html.twig', [
-            'movie' => $movie,
+        }   
+        return $this->render('movies/index.html.twig', [
             'form' => $form->createView(),
         ]);
-    }
-
-    /**
-     * @Route("/{id}", name="movies_show", methods={"GET"})
-     */
-    public function show(Movies $movie): Response
-    {
-        return $this->render('movies/show.html.twig', [
-            'movie' => $movie,
-        ]);
-    }
-
-    /**
-     * @Route("/{id}/edit", name="movies_edit", methods={"GET","POST"})
-     */
-    public function edit(Request $request, Movies $movie): Response
-    {
-        $form = $this->createForm(MoviesType::class, $movie);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('movies_index', [
-                'id' => $movie->getId(),
-            ]);
-        }
-
-        return $this->render('movies/edit.html.twig', [
-            'movie' => $movie,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="movies_delete", methods={"DELETE"})
-     */
-    public function delete(Request $request, Movies $movie): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$movie->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($movie);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('movies_index');
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -87,11 +89,6 @@ class Movies
     private $Poster;
 
     /**
-     * @ORM\Column(type="text")
-     */
-    private $Ratings;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $Type;
@@ -115,6 +112,21 @@ class Movies
      * @ORM\Column(type="string", length=255)
      */
     private $Website;
+
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $Ratings = [];
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", mappedBy="movies")
+     */
+    private $users;
+
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -162,11 +174,14 @@ class Movies
         return $this->Released;
     }
 
-    public function setReleased(\DateTimeInterface $Released): self
+    public function setReleased($Released): self
     {
+        if (is_string($Released)) {
+            $Released = new \DateTime($Released);
+        }
         $this->Released = $Released;
 
-        return $this;
+            return $this;
     }
 
     public function getRuntime(): ?string
@@ -289,18 +304,6 @@ class Movies
         return $this;
     }
 
-    public function getRatings(): ?string
-    {
-        return $this->Ratings;
-    }
-
-    public function setRatings(string $Ratings): self
-    {
-        $this->Ratings = $Ratings;
-
-        return $this;
-    }
-
     public function getType(): ?string
     {
         return $this->Type;
@@ -357,6 +360,46 @@ class Movies
     public function setWebsite(string $Website): self
     {
         $this->Website = $Website;
+
+        return $this;
+    }
+
+    public function getRatings(): ?array
+    {
+        return $this->Ratings;
+    }
+
+    public function setRatings(?array $Ratings): self
+    {
+        $this->Ratings = $Ratings;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->addMovie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->contains($user)) {
+            $this->users->removeElement($user);
+            $user->removeMovie($this);
+        }
 
         return $this;
     }

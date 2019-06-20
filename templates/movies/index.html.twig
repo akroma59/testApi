@@ -4,70 +4,10 @@
 
 {% block body %}
     <h1>Movies index</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Year</th>
-                <th>Rated</th>
-                <th>Released</th>
-                <th>Runtime</th>
-                <th>Genre</th>
-                <th>Director</th>
-                <th>Writer</th>
-                <th>Actors</th>
-                <th>Plot</th>
-                <th>Language</th>
-                <th>Country</th>
-                <th>Awards</th>
-                <th>Poster</th>
-                <th>Ratings</th>
-                <th>Type</th>
-                <th>DVD</th>
-                <th>BoxOffice</th>
-                <th>Production</th>
-                <th>Website</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for movie in movies %}
-            <tr>
-                <td>{{ movie.id }}</td>
-                <td>{{ movie.Title }}</td>
-                <td>{{ movie.Year }}</td>
-                <td>{{ movie.Rated }}</td>
-                <td>{{ movie.Released ? movie.Released|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ movie.Runtime }}</td>
-                <td>{{ movie.Genre }}</td>
-                <td>{{ movie.Director }}</td>
-                <td>{{ movie.Writer }}</td>
-                <td>{{ movie.Actors }}</td>
-                <td>{{ movie.Plot }}</td>
-                <td>{{ movie.Language }}</td>
-                <td>{{ movie.Country }}</td>
-                <td>{{ movie.Awards }}</td>
-                <td>{{ movie.Poster }}</td>
-                <td>{{ movie.Ratings }}</td>
-                <td>{{ movie.Type }}</td>
-                <td>{{ movie.DVD }}</td>
-                <td>{{ movie.BoxOffice }}</td>
-                <td>{{ movie.Production }}</td>
-                <td>{{ movie.Website }}</td>
-                <td>
-                    <a href="{{ path('movies_show', {'id': movie.id}) }}">show</a>
-                    <a href="{{ path('movies_edit', {'id': movie.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="22">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('movies_new') }}">Create new</a>
+    <div class="w-25 m-auto">
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn">{{ button_label|default('Envoyer') }}</button>
+        {{ form_end(form) }}    
+    </div>
 {% endblock %}
