@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Movies;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -22,29 +23,17 @@ class MoviesRepository extends ServiceEntityRepository
     // /**
     //  * @return Movies[] Returns an array of Movies objects
     //  */
-    /*
-    public function findByExampleField($value)
+
+    public function getMoviesByUser($user)
     {
         return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('m.id', 'ASC')
-            ->setMaxResults(10)
+            ->addSelect('u')
+            ->leftJoin('m.users', 'u')
+            ->andWhere('u.id = :id')
+            ->setParameter(':id', $user->getId())
             ->getQuery()
             ->getResult()
         ;
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Movies
-    {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

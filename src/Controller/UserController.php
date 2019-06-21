@@ -44,7 +44,7 @@ class UserController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
             //We are redirected to the name of route
-            return $this->redirectToRoute('user_index');
+            return $this->redirectToRoute('movies_index');
         }
         //We create a view to display the form
         return $this->render('user/new.html.twig', [
@@ -129,7 +129,7 @@ class UserController extends AbstractController
             $this->getDoctrine()->getManager()->flush();
 
             //We are redirected to the name of route
-            return $this->redirectToRoute('user_index', [
+            return $this->redirectToRoute('movies_index', [
                 'id' => $user->getId(),
             ]);
         }
@@ -152,7 +152,7 @@ class UserController extends AbstractController
             $entityManager->flush();
         }
         //We are redirected to the name of route
-        return $this->redirectToRoute('user_index');
+        return $this->redirectToRoute('movies_index');
     }
    
 }
